@@ -105,3 +105,12 @@ body {
 .show {
     display: block;
 }
+
+.spacer {
+    padding-right:15px;
+}
+
+.nav-item {
+    line-height: 35px;
+    padding: 5px 10px;
+}
