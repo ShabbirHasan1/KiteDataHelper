@@ -20,7 +20,35 @@ function closeWebSocket() {
     });
 }
 
+function setSelectedInterval(e) {
+    $('#selectedInterval').text($('#' + e.srcElement.id).text());
+}
+
 $(document).ready(async function () {
+    $('#scripSearch .typeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            limit: 25,
+            async: true,
+            source: function (query, processSync, processAsync) {
+                processSync([]);
+                return $.ajax({
+                    url: "/api/InstrumentDataApi",
+                    type: 'GET',
+                    data: { id: query },
+                    dataType: 'json',
+                    success: function (json) {
+                        // in this example, json is simply an array of strings
+                        return processAsync(json);
+                    }
+                });
+            }
+        });
+
     var rowTemplate = '<tr id="{orderId}"><td>{orderId}</td>\
                         <td>{executionTime}</td><td>{positionType}</td><td>{tradeType}</td><td style="word-wrap:break-word;">{tradeReason}</td><td>{tradingSymbol}</td><td>{strikePrice}</td><td>{averagePrice}</td>\
                         <td>{lastPrice}</td><td>{plusDmiValueAtPosition}</td><td>{minusDmiValueAtPosition}</td><td>{plusDmiIndexAtPosition}</td><td>{minusDmiIndexAtPosition}</td><td>{plusDmiSlope}</td><td>{minusDmiSlope}</td><td>{profitLoss}</td></tr>';

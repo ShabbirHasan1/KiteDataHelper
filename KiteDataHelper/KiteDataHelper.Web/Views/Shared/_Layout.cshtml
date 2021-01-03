@@ -25,7 +25,7 @@
                     <div class="col-6">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a data-toggle="modal" data-target="#exampleModal" @(!ViewBag.IsAuthenticated ? hide : show)>Data</a>
+                                <a data-toggle="modal" data-target="#scripModal" @(!ViewBag.IsAuthenticated ? hide : show)>Data</a>
                             </li>
                             <li class="nav-item">
                                 <a href="/Home/Login" @(!ViewBag.IsAuthenticated ? hide : show)>Strategies</a>
@@ -70,13 +70,17 @@
     <script src="~/lib/mdb/mdb.min.js"></script>
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <script src="~/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/typeahead/typeahead.jquery.min.js"></script>
+    <script src="~/lib/typeahead/bloodhound.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 
-<!-- Modal -->
-<div class="modal fade modal-dialog modal-dialog-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Data Modal -->
+<!-- Strategy Modal -->
+</html>
+<div class="modal fade modal-dialog-centered" id="scripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Download data...</h5>
@@ -89,16 +93,8 @@
                     <div class="col-3">
                         <label>Scrip</label>
                     </div>
-                    <div class="col-9">
-                        <input type="text" class="form-control" placeholder="Search scrip.." />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <label>Selected</label>
-                    </div>
-                    <div class="col-9">
-                        <label>BANKNIFTY</label>
+                    <div class="col-9" id="scripSearch">
+                        <input class="typeahead form-control" type="text" placeholder="Scrips on NSE, NFO">
                     </div>
                 </div>
                 <div class="row">
@@ -110,29 +106,30 @@
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Interval
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">minute</a>
-                                <a class="dropdown-item" href="#">3minutes</a>
-                                <a class="dropdown-item" href="#">5minutes</a>
-                                <a class="dropdown-item" href="#">10minutes</a>
-                                <a class="dropdown-item" href="#">15minutes</a>
-                                <a class="dropdown-item" href="#">30minutes</a>
-                                <a class="dropdown-item" href="#">60minutes</a>
+                            <div class="dropdown-menu form-control" aria-labelledby="dropdownMenuButton">
+                                <a id="lnkMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">minute</a>
+                                <a id="lnkThreeMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">3minute</a>
+                                <a id="lnkFiveMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">5minute</a>
+                                <a id="lnkTenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">10minute</a>
+                                <a id="lnkFifteenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">15minute</a>
+                                <a id="lnkThirtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">30minute</a>
+                                <a id="lnkSixtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">60minute</a>
+                                <a id="lnkDay" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">day</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-3">
-                        <label>60-Minutes</label>
+                        <label id="selectedInterval">Selected</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label>From: </label>
-                        <input data-provide="datepicker">
+                        <input data-provide="datepicker" class="form-control">
                     </div>
                     <div class="col-6">
                         <label>To:</label>
-                        <input data-provide="datepicker">
+                        <input data-provide="datepicker" class="form-control">
                     </div>
                 </div>
             </div>
@@ -143,4 +140,3 @@
         </div>
     </div>
 </div>
-</html>
