@@ -173,20 +173,6 @@ body {
     font-size: 14px;
 }
 
-/* example specific styles */
-/* ----------------------- */
-
-#custom-templates .empty-message {
-    padding: 5px 10px;
-    text-align: center;
-}
-
-#multiple-datasets .league-name {
-    margin: 0 20px 5px 20px;
-    padding: 3px 0;
-    border-bottom: 1px solid #ccc;
-}
-
 #scrollable-dropdown-menu .tt-menu {
     max-height: 150px;
     overflow-y: auto;
