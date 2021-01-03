@@ -1,6 +1,11 @@
+using KiteDataHelper.Common.Interfaces.Services;
+using KiteDataHelper.Models;
+using KiteDataHelper.Service;
+using KiteDataHelper.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +28,23 @@ namespace KiteDataHelper.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache(delegate (MemoryCacheOptions memoryCacheOptions) {
+                memoryCacheOptions.SizeLimit = 1000000;
+            });
+
             services.AddControllersWithViews();
+            services.AddResponseCaching();
+            services.AddHttpClient<IKiteAuthenticationService, KiteAuthenticationService>();
+            services.AddHttpClient<IMarketDataAccessService, MarketDataAccessService>();
+            services.AddSingleton<KiteInstruments>();
+            services.AddSingleton<FifteenMinuteTimer>();
+            services.AddSingleton<TickCache>();
+            services.AddSingleton<Ticker>();
+
+            services.AddSignalR(opt =>
+            {
+                opt.EnableDetailedErrors = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +72,7 @@ namespace KiteDataHelper.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<TickerHub>("/tickers");
             });
         }
     }

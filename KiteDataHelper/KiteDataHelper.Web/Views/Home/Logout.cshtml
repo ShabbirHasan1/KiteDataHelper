@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<div class="container">
+    <h1>You have successfully logged out of Antian IntelliTrade.</h1>
+
+    @Html.ActionLink("Login", "Login", "Home")
+</div>
+
+<input id="_isKiteConnected" type="hidden" value="@ViewBag.IsAuthenticated.ToString()" />

@@ -3,33 +3,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - KiteDataHelper.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>Antian IntelliTrade</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/mdb.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KiteDataHelper.Web</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Antian IntelliTrade</a>
+                <span id="timeLeft"></span>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                    @{
+                        var show = $"style=display:block;";
+                        var hide = $"style=display:none;";
+                    }
+
+                    <div class="nav-item float-md-left">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a href="/Home/Profile" @(ViewBag.IsAuthenticated ? hide : show)>Data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/Home/Login" @(ViewBag.IsAuthenticated ? hide : show)>Strategies</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item float-md-right">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <img width="15" height="15" id="marketStatus" src="~/images/statusred.png" />
+                            </li>
+                            <li class="nav-item">
+                                <a href="/Home/Profile" @(!ViewBag.IsAuthenticated ? hide : show)>Welcome, Himanshu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/Home/Login" @(ViewBag.IsAuthenticated ? hide : show)>Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/Home/Logout" @(!ViewBag.IsAuthenticated ? hide : show) onclick="closeWebSocket()">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -37,12 +59,17 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - KiteDataHelper.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - Antian - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/lib/mdb/popper.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="~/lib/mdb/mdb.min.js"></script>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>
