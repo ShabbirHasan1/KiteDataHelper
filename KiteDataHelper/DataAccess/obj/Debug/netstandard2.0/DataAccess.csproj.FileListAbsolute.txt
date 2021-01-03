@@ -1,0 +1,12 @@
+D:\KiteDataHelper\KiteDataHelper\DataAccess\bin\Debug\netstandard2.0\DataAccess.deps.json
+D:\KiteDataHelper\KiteDataHelper\DataAccess\bin\Debug\netstandard2.0\DataAccess.dll
+D:\KiteDataHelper\KiteDataHelper\DataAccess\bin\Debug\netstandard2.0\DataAccess.pdb
+D:\KiteDataHelper\KiteDataHelper\DataAccess\bin\Debug\netstandard2.0\Common.dll
+D:\KiteDataHelper\KiteDataHelper\DataAccess\bin\Debug\netstandard2.0\Common.pdb
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.csprojAssemblyReference.cache
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.AssemblyInfoInputs.cache
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.AssemblyInfo.cs
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.csproj.CoreCompileInputs.cache
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.csproj.CopyComplete
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.dll
+D:\KiteDataHelper\KiteDataHelper\DataAccess\obj\Debug\netstandard2.0\DataAccess.pdb
