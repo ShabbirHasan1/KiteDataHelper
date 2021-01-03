@@ -1,16 +1,9 @@
-﻿using KiteDataHelper.Common.Exceptions;
-using KiteDataHelper.Common.Interfaces.Services;
-using KiteDataHelper.Common.KiteStructures;
+﻿using KiteDataHelper.Common.KiteStructures;
 using KiteDataHelper.Models;
-using KiteDataHelper.Web;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KiteDataHelper.Web.Hubs
 {
