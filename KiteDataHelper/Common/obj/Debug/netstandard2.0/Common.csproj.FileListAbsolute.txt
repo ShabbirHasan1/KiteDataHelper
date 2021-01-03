@@ -1,8 +1,0 @@
-D:\KiteDataHelper\KiteDataHelper\Common\bin\Debug\netstandard2.0\Common.deps.json
-D:\KiteDataHelper\KiteDataHelper\Common\bin\Debug\netstandard2.0\Common.dll
-D:\KiteDataHelper\KiteDataHelper\Common\bin\Debug\netstandard2.0\Common.pdb
-D:\KiteDataHelper\KiteDataHelper\Common\obj\Debug\netstandard2.0\Common.AssemblyInfoInputs.cache
-D:\KiteDataHelper\KiteDataHelper\Common\obj\Debug\netstandard2.0\Common.AssemblyInfo.cs
-D:\KiteDataHelper\KiteDataHelper\Common\obj\Debug\netstandard2.0\Common.csproj.CoreCompileInputs.cache
-D:\KiteDataHelper\KiteDataHelper\Common\obj\Debug\netstandard2.0\Common.dll
-D:\KiteDataHelper\KiteDataHelper\Common\obj\Debug\netstandard2.0\Common.pdb
