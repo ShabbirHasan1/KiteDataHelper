@@ -172,41 +172,39 @@ namespace KiteDataHelper.Web.Controllers
                 }
                 else
                 {
-                    if (loopCount < 1)
+                    DateTime newTo = DateTime.MinValue;
+                    for (int i = 0; i < loopTimes; i++)
                     {
-                        kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, dateTo);
-                    }
-                    else
-                    {
-                        DateTime newTo = DateTime.MinValue;
-                        for (int i = 0; i < loopTimes; i++)
+                        if (i == 0)
                         {
-                            if (i == 0)
-                            {
-                                newTo = dateFrom.AddDays(30);
-                            }
-                            else
-                            {
-                                dateFrom = newTo;
-                                newTo = dateFrom.AddDays(30);
-                            }
-
-                            if (kiteCandleUnits == null)
-                                kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
-                            else
-                            {
-                                List<KiteCandleUnit> kites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
-                                kiteCandleUnits.AddRange(kites);
-                            }
+                            newTo = dateFrom.AddDays(30);
+                        }
+                        else
+                        {
+                            dateFrom = newTo;
+                            newTo = dateFrom.AddDays(30);
                         }
 
-                        dateFrom = newTo;
-                        newTo = dateFrom.AddDays(dateTo.Subtract(dateFrom).Days);
-                        List<KiteCandleUnit> lastKites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
-                        kiteCandleUnits.AddRange(lastKites);
+                        if (kiteCandleUnits == null)
+                            kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                        else
+                        {
+                            List<KiteCandleUnit> kites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                            kiteCandleUnits.AddRange(kites);
+                        }
                     }
+
+                    dateFrom = newTo;
+                    newTo = dateFrom.AddDays(dateTo.Subtract(dateFrom).Days);
+                    List<KiteCandleUnit> lastKites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                    kiteCandleUnits.AddRange(lastKites);
                 }
             }
+            else
+            {
+                kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, dateTo);
+            }
+
 
             string csv = kiteCandleUnits.ToCsvString();
             Encoding ascii = Encoding.ASCII;
