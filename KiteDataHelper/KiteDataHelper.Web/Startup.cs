@@ -4,15 +4,10 @@ using KiteDataHelper.Service;
 using KiteDataHelper.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KiteDataHelper.Web
 {
@@ -60,9 +55,11 @@ namespace KiteDataHelper.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseResponseCaching();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseAuthorization();

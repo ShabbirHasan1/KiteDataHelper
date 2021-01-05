@@ -261,6 +261,27 @@ namespace KiteDataHelper.Common
             return description;
         }
 
+        public static T GetValueFromDescription<T>(this string description) where T : Enum
+        {
+            foreach (var field in typeof(T).GetFields())
+            {
+                if (Attribute.GetCustomAttribute(field,
+                typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(null);
+                }
+            }
+
+            throw new ArgumentException("Not found.", nameof(description));
+            // Or return default(T);
+        }
+
         public static decimal FindNearestStrike(decimal currentLevel)
         {
             decimal decimalPart;
@@ -300,6 +321,48 @@ namespace KiteDataHelper.Common
         public static double ToUnixEpoch(this DateTime dateTime)
         {
             return dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+
+        public static string ToCsvString(this List<KiteCandleUnit> dataFrame)
+        {
+            string retVal = string.Empty;
+            using (Stream stream = new MemoryStream())
+            {
+                StreamWriter streamWriter = new StreamWriter(stream);
+                streamWriter.WriteLine($"time,open,high,low,close,volume");
+                try
+                {
+                    foreach (KiteCandleUnit row in dataFrame)
+                    {
+                        try
+                        {
+                            string time = row.time.ToString();
+                            string open = row.open.ToString();
+                            string high = row.high.ToString();
+                            string low = row.low.ToString();
+                            string close = row.close.ToString();
+                            string volume = row.volume.ToString();
+                            streamWriter.WriteLine($"{time},{open},{high},{low},{close},{volume}");
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IntelliTradeException("An error occurred while parsing columns for CSV.", ex);
+                        }
+                    }
+                    streamWriter.Flush();
+                    stream.Position = 0;
+                    StreamReader reader = new StreamReader(stream);
+                    retVal = reader.ReadToEnd();
+                    streamWriter.Close();
+                    reader.Close();
+                }
+                catch (IntelliTradeException ex)
+                {
+                    throw ex;
+                }
+            }
+
+            return retVal;
         }
     }
 }

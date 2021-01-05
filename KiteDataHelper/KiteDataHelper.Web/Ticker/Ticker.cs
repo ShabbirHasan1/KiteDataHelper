@@ -384,17 +384,17 @@ namespace KiteDataHelper.Web
                         // data is invalid. This will skip that wrong tick
                         if (tick.InstrumentToken != 0 && IsConnected && offset <= Count)
                         {
-                            List<KeyValuePair<string, object>> keyValuePairs = new List<KeyValuePair<string, object>>();
-                            keyValuePairs.Add(new KeyValuePair<string,object>("timestamp", tick.Timestamp));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("instrumenttoken", tick.InstrumentToken));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("tradable", tick.Tradable));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("open", tick.Open));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("high", tick.High));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("low", tick.Low));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("close", tick.Close));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("lastprice", tick.LastPrice));
-                            keyValuePairs.Add(new KeyValuePair<string, object>("volume", tick.Volume));
-                            _tickCache.Data.Append(keyValuePairs, true);
+                            //List<KeyValuePair<string, object>> keyValuePairs = new List<KeyValuePair<string, object>>();
+                            //keyValuePairs.Add(new KeyValuePair<string,object>("timestamp", tick.Timestamp));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("instrumenttoken", tick.InstrumentToken));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("tradable", tick.Tradable));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("open", tick.Open));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("high", tick.High));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("low", tick.Low));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("close", tick.Close));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("lastprice", tick.LastPrice));
+                            //keyValuePairs.Add(new KeyValuePair<string, object>("volume", tick.Volume));
+                            //_tickCache.Data.Append(keyValuePairs, true);
                             OnTick(tick, _hubContext);
                         }
                     }

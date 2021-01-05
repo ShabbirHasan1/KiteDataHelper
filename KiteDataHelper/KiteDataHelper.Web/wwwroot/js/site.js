@@ -11,7 +11,7 @@ var todaysDate = new Date();
 var month = months[todaysDate.getMonth()];
 var date = todaysDate.getDate().toString();
 var year = todaysDate.getFullYear().toString();
-var countDownDateString = month + ' ' + date + ', ' + year + ' 15:45:00';
+var countDownDateString = month + ' ' + date + ', ' + year + ' 13:40:00';
 var countDownDate = new Date(countDownDateString).getTime();
 
 function closeWebSocket() {
@@ -22,6 +22,71 @@ function closeWebSocket() {
 
 function setSelectedInterval(e) {
     $('#selectedInterval').text($('#' + e.srcElement.id).text());
+}
+
+function downloadData() {
+    var downloadDataParameters = {
+        "tradingSymbol": "",
+        "interval": "",
+        "from": "",
+        "to":""
+    };
+
+    downloadDataParameters.from = $('#dateFrom').val().replace('/', '-').replace('/', '-');
+    downloadDataParameters.to = $('#dateTo').val().replace('/', '-').replace('/', '-');
+    downloadDataParameters.interval = $('#selectedInterval').text();
+    downloadDataParameters.tradingSymbol = $('#txtScrip').val();
+    console.log(downloadDataParameters);
+    $.ajax({
+        url: "/api/InstrumentDataApi",
+        type: 'POST',
+        data: JSON.stringify(downloadDataParameters),
+        contentType: 'application/json',
+        dataType: 'text/plain',
+        xhrFields: {
+            responseType: 'blob' // to avoid binary data being mangled on charset conversion
+        },
+        success: function (blob, status, xhr) {
+            // check for a filename
+            var filename = "";
+            var disposition = xhr.getResponseHeader('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+            }
+
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                window.navigator.msSaveBlob(blob, filename);
+            } else {
+                var URL = window.URL || window.webkitURL;
+                var downloadUrl = URL.createObjectURL(blob);
+
+                if (filename) {
+                    // use HTML5 a[download] attribute to specify filename
+                    var a = document.createElement("a");
+                    // safari doesn't support this yet
+                    if (typeof a.download === 'undefined') {
+                        window.location.href = downloadUrl;
+                    } else {
+                        a.href = downloadUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                    }
+                } else {
+                    window.location.href = downloadUrl;
+                }
+
+                setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(status);
+            console.log(error);
+        }
+    });
 }
 
 $(document).ready(async function () {
@@ -67,14 +132,14 @@ $(document).ready(async function () {
     }
 
     if (_isKiteConnected.value === 'True') {
-        connection = new signalR.HubConnectionBuilder().withUrl("/tickers").build();
+        connection = new signalR.HubConnectionBuilder().withUrl("/tickers").configureLogging(signalR.LogLevel.Information).build();
         //const chart = LightweightCharts.createChart(document.getElementById('chart'), { width: 750, height: 800 });
         //const candleStickSeries = chart.addCandlestickSeries();
         async function start() {
             try {
                 await connection.start();
                 console.log("SignalR Connected");
-                //startTicks();
+                startTicks();
                 document.getElementById("marketStatus").src = '/images/statusgreen.png';
             } catch (err) {
                 console.log(err);
@@ -86,27 +151,27 @@ $(document).ready(async function () {
 
         connection.on("ReceiveMessage", function (message) {
             console.log(message);
-            candleStickSeries.update(message);
+            //candleStickSeries.update(message);
         });
 
         connection.on("PositionUpdate", function (message) {
 
-            message.time = new Date(message.time).toLocaleTimeString();
-            if ($('#' + String(message.orderId)).length > 0) {
-                $('#' + String(message.orderId) + ' td').remove();
-                $('#' + String(message.orderId)).append(colTemplate.supplant(message));
-            }
-            else {
-                var value = rowTemplate.supplant(message);
-                $('#positiondetails > tbody').append(value);
-            }
+            //message.time = new Date(message.time).toLocaleTimeString();
+            //if ($('#' + String(message.orderId)).length > 0) {
+            //    $('#' + String(message.orderId) + ' td').remove();
+            //    $('#' + String(message.orderId)).append(colTemplate.supplant(message));
+            //}
+            //else {
+            //    var value = rowTemplate.supplant(message);
+            //    $('#positiondetails > tbody').append(value);
+            //}
 
-            if (parseFloat(message.profitLoss) > 0) {
-                $('#' + String(message.orderId) + 'td:nth-child(15)').attr('style', 'color:green;');
-            }
-            else {
-                $('#' + String(message.orderId) + 'td:nth-child(15)').attr('style', 'color:red;');
-            }
+            //if (parseFloat(message.profitLoss) > 0) {
+            //    $('#' + String(message.orderId) + 'td:nth-child(15)').attr('style', 'color:green;');
+            //}
+            //else {
+            //    $('#' + String(message.orderId) + 'td:nth-child(15)').attr('style', 'color:red;');
+            //}
         });
 
         function startServerTimer() {
