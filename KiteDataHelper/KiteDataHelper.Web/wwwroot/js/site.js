@@ -21,7 +21,7 @@ function closeWebSocket() {
 }
 
 function setSelectedInterval(e) {
-    $('#selectedInterval').text($('#' + e.srcElement.id).text());
+    $('#selectedInterval').val($('#' + e.srcElement.id).text());
 }
 
 function downloadData() {
@@ -38,11 +38,11 @@ function downloadData() {
     downloadDataParameters.tradingSymbol = $('#txtScrip').val();
     console.log(downloadDataParameters);
     $.ajax({
-        url: "/api/InstrumentDataApi",
+        url: "/Home/DownloadData",
         type: 'POST',
         data: JSON.stringify(downloadDataParameters),
         contentType: 'application/json',
-        dataType: 'text/plain',
+        dataType: 'application/octet-stream',
         xhrFields: {
             responseType: 'blob' // to avoid binary data being mangled on charset conversion
         },
@@ -139,7 +139,7 @@ $(document).ready(async function () {
             try {
                 await connection.start();
                 console.log("SignalR Connected");
-                startTicks();
+                //startTicks();
                 document.getElementById("marketStatus").src = '/images/statusgreen.png';
             } catch (err) {
                 console.log(err);
@@ -147,7 +147,7 @@ $(document).ready(async function () {
             }
         };
 
-        connection.onclose(start);
+        connection.onclose(function () { console.log("Connection closed because of error");});
 
         connection.on("ReceiveMessage", function (message) {
             console.log(message);

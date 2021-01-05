@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using KiteDataHelper.Common;
+﻿using KiteDataHelper.Common;
 using KiteDataHelper.Common.Enums;
-using KiteDataHelper.Common.Exceptions;
 using KiteDataHelper.Common.Interfaces.Services;
 using KiteDataHelper.Common.KiteStructures;
 using KiteDataHelper.Common.Models;
@@ -18,6 +9,13 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,17 +69,18 @@ namespace IntelliTrade.Web.Controllers.api
 
         // POST api/<InstrumentDataApiController>
         [HttpPost]
-        public async Task<HttpResponseMessage> Post([FromBody] KiteDataRequest dataRequest)
+        public async Task<IActionResult> Post([FromBody] KiteDataRequest dataRequest)
         {
             HttpResponseMessage result = null;
             List<KiteCandleUnit> kiteCandleUnits = null;
             Instrument ? instrument = _kiteInstruments.Instruments.Where(obj => string.Compare(obj.TradingSymbol, dataRequest.TradingSymbol) == 0).FirstOrDefault();
             if (instrument == null)
             {
-                result = new HttpResponseMessage(HttpStatusCode.NotFound);
-                result.Content = new StringContent("Script not found.");
-                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/text");
-                return result;
+                //result = new HttpResponseMessage(HttpStatusCode.NotFound);
+                //result.Content = new StringContent("Script not found.");
+                //result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/text");
+                //return result;
+                return NotFound();
             }
 
             uint instrumentToken = instrument.Value.InstrumentToken;
@@ -157,22 +156,31 @@ namespace IntelliTrade.Web.Controllers.api
                 }
             }
 
+            string csv = kiteCandleUnits.ToCsvString();
+            Encoding ascii = Encoding.ASCII;
+            byte[] bytes = ascii.GetBytes(csv);
             using (MemoryStream stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
-                {
-                    writer.Write(kiteCandleUnits.ToCsvString());
-                    writer.Flush();
-                    stream.Position = 0;
+                
 
-                    result = new HttpResponseMessage(HttpStatusCode.OK);
-                    result.Content = new StreamContent(stream);
-                    result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-                    result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = $"{dataRequest.TradingSymbol}.csv" };
-                }
+                //using (StreamWriter writer = new StreamWriter(stream))
+                //{
+                //    writer.Write(kiteCandleUnits.ToCsvString());
+                //    writer.Flush();
+                //    stream.Position = 0;
+                //    byte[] data = new byte[stream.Length];
+                //    using (StreamReader reader = new StreamReader(stream))
+                //    {
+                //        str br = reader.re
+                //    }
+                //    //result = new HttpResponseMessage(HttpStatusCode.OK);
+                //    //result.Content = new StreamContent(stream);
+                //    //result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                //    //result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = $"{dataRequest.TradingSymbol}.csv" };
+                //}
             }
 
-            return result;
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
 
         // PUT api/<InstrumentDataApiController>/5

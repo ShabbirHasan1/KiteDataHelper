@@ -1,17 +1,22 @@
-﻿using KiteDataHelper.Common.Exceptions;
+﻿using KiteDataHelper.Common.Enums;
+using KiteDataHelper.Common.Exceptions;
 using KiteDataHelper.Common.Interfaces.Services;
 using KiteDataHelper.Common.KiteStructures;
+using KiteDataHelper.Common.Models;
 using KiteDataHelper.Models;
 using KiteDataHelper.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
-
+using System.Linq;
+using KiteDataHelper.Common;
 namespace KiteDataHelper.Web.Controllers
 {
     public class HomeController : Controller
@@ -118,6 +123,95 @@ namespace KiteDataHelper.Web.Controllers
         {
             _fifteenMinuteTimer.FifteenMinTimer.Start();
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadData(string tradingSymbol, string interval, string from, string to)
+        {
+            List<KiteCandleUnit> kiteCandleUnits = null;
+            Instrument? instrument = _kiteInstruments.Instruments.Where(obj => string.Compare(obj.TradingSymbol, tradingSymbol) == 0).FirstOrDefault();
+            if (instrument == null)
+            {
+                return NotFound();
+            }
+
+            uint instrumentToken = instrument.Value.InstrumentToken;
+            Interval lag = interval.GetValueFromDescription<Interval>();
+            string[] fromParts = from.Split('/');
+            string[] toParts = to.Split('/');
+            DateTime dateFrom = new DateTime(Convert.ToInt32(fromParts[2]), Convert.ToInt32(fromParts[0]), Convert.ToInt32(fromParts[1]));
+            DateTime dateTo = new DateTime(Convert.ToInt32(toParts[2]), Convert.ToInt32(toParts[0]), Convert.ToInt32(toParts[1]));
+            TimeSpan totalDays = dateTo.Subtract(dateFrom);
+            if (totalDays.Days > 30)
+            {
+                float loopCount = (float)totalDays.Days / 30;
+                int loopTimes = totalDays.Days / 30;
+                if (Convert.ToDouble(loopTimes) == loopCount)
+                {
+                    DateTime newTo = DateTime.MinValue;
+                    for (int i = 0; i < loopTimes; i++)
+                    {
+                        if (i == 0)
+                        {
+                            newTo = dateFrom.AddDays(30);
+                        }
+                        else
+                        {
+                            dateFrom = newTo;
+                            newTo = dateFrom.AddDays(30);
+                        }
+
+                        if (kiteCandleUnits == null)
+                            kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                        else
+                        {
+                            List<KiteCandleUnit> kites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                            kiteCandleUnits.AddRange(kites);
+                        }
+                    }
+                }
+                else
+                {
+                    if (loopCount < 1)
+                    {
+                        kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, dateTo);
+                    }
+                    else
+                    {
+                        DateTime newTo = DateTime.MinValue;
+                        for (int i = 0; i < loopTimes; i++)
+                        {
+                            if (i == 0)
+                            {
+                                newTo = dateFrom.AddDays(30);
+                            }
+                            else
+                            {
+                                dateFrom = newTo;
+                                newTo = dateFrom.AddDays(30);
+                            }
+
+                            if (kiteCandleUnits == null)
+                                kiteCandleUnits = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                            else
+                            {
+                                List<KiteCandleUnit> kites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                                kiteCandleUnits.AddRange(kites);
+                            }
+                        }
+
+                        dateFrom = newTo;
+                        newTo = dateFrom.AddDays(dateTo.Subtract(dateFrom).Days);
+                        List<KiteCandleUnit> lastKites = await _marketDataAccessService.GetData(instrumentToken, lag, dateFrom, newTo);
+                        kiteCandleUnits.AddRange(lastKites);
+                    }
+                }
+            }
+
+            string csv = kiteCandleUnits.ToCsvString();
+            Encoding ascii = Encoding.ASCII;
+            byte[] bytes = ascii.GetBytes(csv);
+            return File(bytes, "text/csv", $"{tradingSymbol}.csv");
         }
     }
 }

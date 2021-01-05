@@ -63,8 +63,8 @@
             &copy; @DateTime.Now.Year - Antian - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.1/signalr.min.js"></script>
     <script src="~/lib/mdb/popper.min.js"></script>
     <script src="~/lib/bootstrap/bootstrap.min.js"></script>
     <script src="~/lib/mdb/mdb.min.js"></script>
@@ -82,61 +82,63 @@
 <div class="modal fade modal-dialog-centered" id="scripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display:none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Download data...</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-3">
-                        <label>Scrip</label>
-                    </div>
-                    <div class="col-9" id="scripSearch">
-                        <input id="txtScrip" class="typeahead form-control" style="width:100%;" type="text" placeholder="Scrips on NSE, NFO">
-                    </div>
+            <form asp-action="DownloadData" asp-controller="Home">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Download data...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="row">
-                    <div class="col-3">
-                        <label>Interval</label>
-                    </div>
-                    <div class="col-6">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Interval
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a id="lnkMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">minute</a>
-                                <a id="lnkThreeMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">3minute</a>
-                                <a id="lnkFiveMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">5minute</a>
-                                <a id="lnkTenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">10minute</a>
-                                <a id="lnkFifteenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">15minute</a>
-                                <a id="lnkThirtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">30minute</a>
-                                <a id="lnkSixtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">60minute</a>
-                                <a id="lnkDay" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">day</a>
-                            </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <label>Scrip</label>
+                        </div>
+                        <div class="col-9" id="scripSearch">
+                            <input id="txtScrip" name="tradingSymbol" class="typeahead form-control" style="width:100%;" type="text" placeholder="Scrips on NSE, NFO">
                         </div>
                     </div>
-                    <div class="col-3">
-                        <label id="selectedInterval">Selected</label>
+                    <div class="row">
+                        <div class="col-3">
+                            <label>Interval</label>
+                        </div>
+                        <div class="col-6">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Interval
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a id="lnkMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">minute</a>
+                                    <a id="lnkThreeMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">3minute</a>
+                                    <a id="lnkFiveMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">5minute</a>
+                                    <a id="lnkTenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">10minute</a>
+                                    <a id="lnkFifteenMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">15minute</a>
+                                    <a id="lnkThirtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">30minute</a>
+                                    <a id="lnkSixtyMinute" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">60minute</a>
+                                    <a id="lnkDay" class="dropdown-item" href="#" onclick="setSelectedInterval(event)">day</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" type="text" id="selectedInterval" name="interval"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>From: </label>
+                            <input type="text" id="dateFrom" name="from" data-provide="datepicker" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label>To:</label>
+                            <input type="text" id="dateTo" name="to" data-provide="datepicker" class="form-control">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <label>From: </label>
-                        <input id="dateFrom" data-provide="datepicker" class="form-control">
-                    </div>
-                    <div class="col-6">
-                        <label>To:</label>
-                        <input id="dateTo" data-provide="datepicker" class="form-control">
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Download</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="downloadData(event)">Download</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
