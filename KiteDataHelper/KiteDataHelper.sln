@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiteDataHelper.Web", "KiteDataHelper.Web\KiteDataHelper.Web.csproj", "{1491C085-4749-4AD6-8BBB-BCF924C65344}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiteDataHelper.Web", "KiteDataHelper.Web\KiteDataHelper.Web.csproj", "{1491C085-4749-4AD6-8BBB-BCF924C65344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{51B16569-8065-40B4-B773-5EFCF3E1F0F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{51B16569-8065-40B4-B773-5EFCF3E1F0F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{EE35FBFF-DF5A-4EA2-805E-461AE9CA0179}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{EE35FBFF-DF5A-4EA2-805E-461AE9CA0179}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{4DD59F67-5952-42D0-A7FE-B3B93E43F952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{4DD59F67-5952-42D0-A7FE-B3B93E43F952}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{1DB76BCB-362B-4186-ACCE-DEFD7F827DAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{1DB76BCB-362B-4186-ACCE-DEFD7F827DAF}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "KiteBackend", "KiteBackend\KiteBackend.sqlproj", "{89E034A8-2D08-40DF-B918-51CDD1B6D331}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{1DB76BCB-362B-4186-ACCE-DEFD7F827DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DB76BCB-362B-4186-ACCE-DEFD7F827DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DB76BCB-362B-4186-ACCE-DEFD7F827DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E034A8-2D08-40DF-B918-51CDD1B6D331}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
